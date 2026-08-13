@@ -1,0 +1,14 @@
+{
+  "currency": "USD",
+  "prices": [
+    {
+      "provider": "replace-with-provider-id",
+      "model": "replace-with-model-id",
+      "inputPerMillion": 0,
+      "outputPerMillion": 0,
+      "cacheReadPerMillion": 0,
+      "cacheWritePerMillion": 0
+    }
+  ]
+}
+
