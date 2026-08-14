@@ -1,5 +1,10 @@
 # dsh-cost
 
+[![CI](https://github.com/dongsheng123132/dsh-cost/actions/workflows/check.yml/badge.svg)](https://github.com/dongsheng123132/dsh-cost/actions/workflows/check.yml)
+[![MIT 许可证](https://img.shields.io/github/license/dongsheng123132/dsh-cost)](LICENSE)
+[![Node.js 22+](https://img.shields.io/badge/Node.js-%E2%89%A522-339933?logo=nodedotjs&logoColor=white)](package.json)
+[![Awesome DSH Plugins](https://img.shields.io/badge/Awesome_DSH-%E5%B7%B2%E9%AA%8C%E8%AF%81%E5%AE%9E%E9%AA%8C-0969da)](https://github.com/dongsheng123132/awesome-dsh-plugins/blob/main/README.zh-CN.md#2origin-%E6%8F%92%E4%BB%B6%E5%AE%9E%E9%AA%8C%E5%AE%A4)
+
 面向 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的证据优先 token 成本账本与预算检查器。
 
 `dsh-cost` 折叠 DSH 的持久会话日志：把每条已提交的 `assistant/message.usage` 归属到当时生效的 `request/header` provider/model 路由，再套用用户自己维护的价格表。缺 usage、缺价格都会明确暴露，绝不把残缺证据包装成“总成本”。
@@ -56,4 +61,3 @@ npm run smoke:plugin
 ```
 
 MIT
-
