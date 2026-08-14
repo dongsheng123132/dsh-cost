@@ -69,5 +69,3 @@ export function createDefinitions(ctx, config = {}) {
 export function apply(ctx, config = {}) {
   for (const definition of createDefinitions(ctx, config)) ctx.tools.register(definition)
 }
-
-export default apply

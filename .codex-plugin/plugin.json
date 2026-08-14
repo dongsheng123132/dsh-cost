@@ -1,0 +1,20 @@
+{
+  "name": "dsh-cost",
+  "version": "0.2.0",
+  "description": "Audit durable DSH usage-cost evidence and fail-closed budget checks without inventing missing usage or prices.",
+  "author": { "name": "2Origin", "url": "https://github.com/dongsheng123132" },
+  "homepage": "https://github.com/dongsheng123132/dsh-cost#readme",
+  "repository": "https://github.com/dongsheng123132/dsh-cost",
+  "license": "MIT",
+  "keywords": ["deepseek-harness", "cost", "token-usage", "budget", "evidence"],
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "DSH Cost",
+    "shortDescription": "Audit durable token-cost and budget evidence.",
+    "longDescription": "Fold durable DSH usage records or sanitized MCP usage rows under a caller-owned price book, exposing missing usage and unpriced routes instead of presenting partial totals as complete.",
+    "developerName": "2Origin",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Audit"],
+    "defaultPrompt": ["Check these sanitized usage rows against my price book and budget."]
+  }
+}

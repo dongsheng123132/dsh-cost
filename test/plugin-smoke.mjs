@@ -1,5 +1,9 @@
 import assert from 'node:assert/strict'
-import { createDefinitions } from '../index.js'
+import * as plugin from '../index.js'
+
+assert.equal('default' in plugin, false, 'a default export makes the real DSH Loader discard namespace inject metadata')
+assert.equal(plugin.name, 'dsh-cost')
+assert.deepEqual(plugin.inject, ['tools', 'tokenMeter'])
 
 const registered = []
 const ctx = {
@@ -12,7 +16,7 @@ const config = {
     prices: [{ provider: 'local', model: 'm', inputPerMillion: 1, outputPerMillion: 2 }]
   }
 }
-const tools = createDefinitions(ctx, config)
+const tools = plugin.createDefinitions(ctx, config)
 assert.deepEqual(tools.map(tool => tool.name), ['dsh_cost_report', 'dsh_cost_check'])
 const execution = {
   agent: {
@@ -30,5 +34,4 @@ assert.equal(report.knownCost, 1)
 assert.equal(report.budget.state, 'within')
 const check = await tools[1].execute({ budget: 0.5, failClosed: true }, execution)
 assert.equal(check.allowed, false)
-console.log(JSON.stringify({ ok: true, tools: tools.map(tool => tool.name), knownCost: report.knownCost }))
-
+console.log(JSON.stringify({ ok: true, namespacePlugin: true, inject: plugin.inject, tools: tools.map(tool => tool.name), knownCost: report.knownCost }))

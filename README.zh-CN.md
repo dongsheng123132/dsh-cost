@@ -18,7 +18,11 @@ dsh plugin --profile <name> add github:dongsheng123132/dsh-cost
 插件提供两个工具：
 
 - `dsh_cost_report`：会话持久成本、路由拆分、证据完整性、可选预算状态，以及当前 `ctx.tokenMeter` 压力快照。
-- `dsh_cost_check`：显式的 fail-open / fail-closed 预算判断；v0.1 不冒充自动拦截未来调用。
+- `dsh_cost_check`：显式的 fail-open / fail-closed 预算判断；不冒充自动拦截未来调用。
+
+同一证据核心还通过内置 stdio MCP server 暴露为 `cost_report` 和 `cost_check`。MCP 只接收有界、脱敏的 usage 行（`provider`、`model`、互斥 token 桶，或显式 `missingUsage` 标记），提示词、消息正文、凭据及其他额外字段会被拒绝。正式 Codex 插件清单位于 `.codex-plugin/plugin.json`。
+
+DSH 入口采用只有 `name` / `inject` / `apply` 的 namespace plugin，不提供 default export，从而让真实 Cordis Loader 保留 `tools` 和 `tokenMeter` 注入；结构检查和插件 smoke 会阻止该回归再次出现。
 
 ## 价格表
 
@@ -58,6 +62,9 @@ dsh-cost --events session-events.json --prices prices.json --budget 5 --fail-clo
 npm test
 npm run check
 npm run smoke:plugin
+npm run smoke:mcp
 ```
+
+已有 DSH 构建和装入本 bundle 的隔离 Web profile 时，可运行 `DSH_CHECKOUT=/path/to/dsh DSH_HOME=/path/to/isolated-home npm run smoke:web-loader`。该 smoke 使用有界且不含凭据的环境启动真实 stock Web profile，并要求观察到 readiness URL。设置 `DSH_CHECKOUT` 后，`npm run smoke:dsh` 还会通过真实 DSH ToolRuntime 枚举并调用两项工具。
 
 MIT

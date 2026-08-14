@@ -20,6 +20,10 @@ The bundle mounts two tools:
 - `dsh_cost_report` — durable session cost, route breakdown, evidence completeness, optional budget status, and the current `ctx.tokenMeter` pressure snapshot.
 - `dsh_cost_check` — explicit fail-open/fail-closed budget decision. It does not claim to intercept future calls automatically.
 
+The same evidence core is available through the bundled stdio MCP server as `cost_report` and `cost_check`. MCP accepts only bounded, sanitized usage rows (`provider`, `model`, disjoint token buckets, or an explicit `missingUsage` marker); it rejects prompts, message bodies, credentials and other extra fields. The formal Codex plugin manifest lives at `.codex-plugin/plugin.json`.
+
+The DSH entry is a namespace plugin (`name` / `inject` / `apply`) with no default export. This preserves both `tools` and `tokenMeter` injection through the real Cordis Loader. Structural and plugin smokes fail if a default export is reintroduced.
+
 ## Price book
 
 Copy `prices.example.json`, replace the zero placeholders with prices from your own current provider contract, and pass its path as plugin config:
@@ -58,6 +62,9 @@ Exit code `2` means over budget, or unknown when `--fail-closed` is active. The 
 npm test
 npm run check
 npm run smoke:plugin
+npm run smoke:mcp
 ```
+
+For a built DSH checkout and an isolated Web profile containing this bundle, run `DSH_CHECKOUT=/path/to/dsh DSH_HOME=/path/to/isolated-home npm run smoke:web-loader`. The smoke starts the real stock Web profile with a bounded, credential-free environment and requires an actual readiness URL. `npm run smoke:dsh` additionally enumerates and calls both tools through the real DSH ToolRuntime when `DSH_CHECKOUT` is set.
 
 MIT

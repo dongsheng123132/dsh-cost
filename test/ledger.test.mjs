@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { buildCostReport, validatePriceBook } from '../lib/ledger.mjs'
+import { buildCostReport, buildCostReportFromUsageRows, usageRowsToEvents, validatePriceBook } from '../lib/ledger.mjs'
 
 const prices = {
   currency: 'USD',
@@ -57,3 +57,19 @@ test('known spend over budget is decisive even with incomplete evidence', () => 
   assert.equal(report.budget.state, 'over')
 })
 
+test('sanitized usage rows produce the same fail-closed report without accepting raw content', () => {
+  const report = buildCostReportFromUsageRows([
+    { provider: 'local', model: 'model-a', inputTokens: 1_000_000, outputTokens: 500_000 },
+    { provider: 'other', model: 'model-b', missingUsage: true }
+  ], prices, { budget: 3 })
+  assert.equal(report.knownCost, 2)
+  assert.equal(report.complete, false)
+  assert.equal(report.missingUsageCalls, 1)
+  assert.equal(report.budget.state, 'unknown')
+  assert.throws(() => usageRowsToEvents([{ provider: 'local', model: 'model-a', inputTokens: 1, outputTokens: 1, prompt: 'secret body' }]), /not allowed/)
+})
+
+test('sanitized usage rows are bounded and reject contradictory missing evidence', () => {
+  assert.throws(() => usageRowsToEvents(new Array(10_001).fill({ provider: 'p', model: 'm', missingUsage: true })), /10000/)
+  assert.throws(() => usageRowsToEvents([{ provider: 'p', model: 'm', missingUsage: true, inputTokens: 1 }]), /forbidden/)
+})
